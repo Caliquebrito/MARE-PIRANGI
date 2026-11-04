@@ -9,6 +9,12 @@
 <meta property="og:description" content="Houses com piscina, apartamentos com vista para o mar e rooftop de lazer.">
 <meta property="og:image" content="img/ext-06-aerea-01.jpg">
 <meta name="theme-color" content="#0f2a33">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maré">
 <link rel="preload" href="fonts/marcellus-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%230f2a33%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-family=%22Georgia%22 font-size=%2216%22 text-anchor=%22middle%22 fill=%22%23f3f4ef%22%3EM%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="lib/pannellum.css">
@@ -226,6 +232,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .sl.film .fcap h2{font-size:clamp(28px,3vw,44px);margin-top:12px}
 .sl.film.playing .fcap{opacity:0}
 .sl.film .snd{position:absolute;right:var(--gp);bottom:calc(var(--gp) + 46px);z-index:3}
+.sl.film .ffs{position:absolute;right:calc(var(--gp) + 0px);bottom:calc(var(--gp) + 98px);z-index:3}
+#gal .g-top,#gal .g-bot{transition:opacity .4s}
+#gal.immersive .g-top,#gal.immersive .g-bot,#gal.immersive .sl.film .snd,#gal.immersive .sl.film .ffs{opacity:0;pointer-events:none}
+#gal.immersive{cursor:none}
 #gal.on-film .g-top .wordmark{opacity:0}
 .sl.film .rot{display:none}
 @media (max-width:760px) and (orientation:portrait){.sl.film .rot{display:block;position:absolute;left:0;right:0;top:calc(50% + 28vw + 16px);text-align:center;font-size:12.5px;color:rgba(255,255,255,.6);z-index:2}}
@@ -265,7 +275,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .g-grid button:hover .im{transform:translateY(-2px)}
 .g-grid .t{font-size:13px;margin-top:8px}
 .g-grid .k{font-size:11.5px;color:var(--teal);margin-top:2px}
-@media (max-width:760px){
+@media (max-width:760px), (orientation:portrait) and (max-width:1100px){
   #gal{--gp:18px}
   .g-top .wordmark{display:none}
   .g-chap{justify-content:flex-start}
@@ -298,6 +308,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 #toast{position:fixed;left:50%;bottom:calc(90px + var(--safe-b));transform:translateX(-50%) translateY(10px);z-index:40;background:var(--paper);color:var(--deep);
   font-size:13px;font-weight:500;height:38px;display:flex;align-items:center;padding:0 18px;border-radius:999px;opacity:0;transition:.3s var(--ease);pointer-events:none;box-shadow:0 10px 30px rgba(8,22,27,.3)}
 #toast.on{opacity:1;transform:translateX(-50%)}
+#sheet{position:fixed;inset:0;z-index:50;background:rgba(8,22,27,.5);display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s;padding:16px calc(16px + var(--safe-r)) calc(16px + var(--safe-b)) calc(16px + var(--safe-l))}
+#sheet.open{opacity:1;visibility:visible}
+.sh-in{background:var(--paper);color:var(--ink);border-radius:var(--r-xl);padding:24px 22px 20px;max-width:460px;width:100%;transform:translateY(20px);transition:transform .4s var(--ease)}
+#sheet.open .sh-in{transform:none}
+.sh-in h4{font-family:var(--serif);font-weight:400;font-size:24px;margin:0 0 10px;color:var(--deep)}
+.sh-in p{font-size:14.5px;line-height:1.55;color:var(--muted);margin:0 0 10px}.sh-in p b{color:var(--deep);font-weight:600}
+.sh-in .tip{font-size:13px}
+.sh-in .btn{margin-top:8px;width:100%;background:var(--deep);color:#fff;border-color:var(--deep)}
 #coords{position:fixed;left:50%;top:50%;z-index:9;transform:translate(-50%,-50%);pointer-events:none;display:none;font:12px monospace;color:#fff;text-shadow:0 0 3px #000}
 #coords::before{content:"+";display:block;text-align:center;font-size:22px}
 
@@ -320,6 +338,85 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   .cover .btn{height:48px;width:auto;padding:0 18px;font-size:14px}
   .cover-top span{display:none}
 }
+
+@media (orientation:portrait) and (min-width:761px) and (max-width:1100px){
+  #gal{--gp:34px}
+  .tx h2{font-size:42px}.sl.chapter .tx h2{font-size:52px}.tx p{font-size:16px;max-width:560px}
+  .sl.pair .tx h2{font-size:26px}.sl.pair .tx p{font-size:14px}
+  .sl.full .cap h2{font-size:48px}.sl.full .cap p{font-size:16px}
+  .sl.dark li{font-size:15px}
+  .g-top .wordmark{display:block}
+}
+/* ---------- celular deitado / telas baixas ---------- */
+@media (orientation:landscape) and (max-height:520px){
+  #top{padding-top:calc(10px + var(--safe-t))}
+  .top-r .btn,#bar .btn{height:38px;min-width:38px}
+  .btn.icon{width:38px}
+  #scene{bottom:calc(60px + var(--safe-b));max-width:min(440px,52vw)}
+  #scene .title{font-size:22px;margin:6px 0 0}
+  #scene .desc,.note,.count{display:none}
+  .shade-b{height:170px}
+  #bar{padding-bottom:calc(10px + var(--safe-b))}
+  #bPrev,#bNext{display:none}
+  #drawer{bottom:calc(56px + var(--safe-b));top:calc(10px + var(--safe-t));padding:12px 16px 12px;border-radius:20px;display:flex;flex-direction:column}
+  .d-head{margin-bottom:8px}.d-head h3{font-size:18px}.x{width:32px;height:32px}
+  .tabs{margin-bottom:10px}.tab{height:30px;font-size:12.5px}
+  .strip{flex:1;min-height:0;align-items:flex-start}
+  .th{width:150px}.th .img{width:150px;height:84px}.th .cap{font-size:12px;margin-top:6px}
+  .cover{bottom:calc(16px + var(--safe-b))}
+  .cover h1{font-size:60px}
+  .cover .sub{margin-top:8px;font-size:10.5px}
+  .cover p{font-size:13.5px;margin-top:10px}
+  .cover .acts{margin-top:14px}
+  .cover .btn{height:42px;padding:0 16px;font-size:13.5px;width:auto}
+  .cover-tag{display:none}
+  .cover-top{top:calc(12px + var(--safe-t))}
+  #gal{--gp:16px}
+  .g-top{padding-top:calc(8px + var(--safe-t));padding-left:calc(16px + var(--safe-l));padding-right:calc(16px + var(--safe-r))}
+  .g-bot{padding-bottom:calc(8px + var(--safe-b));padding-left:calc(16px + var(--safe-l));padding-right:calc(16px + var(--safe-r))}
+  .cbtn{height:34px;min-width:34px;font-size:12.5px;padding:0 12px}.cbtn.icon{width:34px}
+  .g-top .wordmark{display:none}
+  .g-top .cbtn .t,.g-bot .cbtn .t{display:none}.g-top .cbtn.lbl,.g-bot .cbtn.lbl{padding:0;width:34px}
+  .sl.split,.sl.chapter,.sl.duo,.sl.lazer,.sl.pair,.sl.text,.sl.statement{padding:54px calc(16px + var(--safe-r)) 52px calc(16px + var(--safe-l));gap:18px}
+  .sl.split{grid-template-columns:1.1fr 1fr;grid-template-rows:minmax(0,1fr)}
+  .sl.chapter{grid-template-columns:1fr 1.15fr;grid-template-rows:minmax(0,1fr)}
+  .sl.lazer{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr)}
+  .sl.duo{grid-template-columns:1.3fr 1fr;grid-template-rows:minmax(0,1fr)}
+  .sl.duo .ph.small{display:none}.sl.duo .tx{align-self:center;padding:0}
+  .sl.chapter .ph,.sl.lazer .ph{order:0}
+  .sl.split .tx,.sl.chapter .tx{padding:0}
+  .tx h2,.sl.chapter .tx h2{font-size:24px;margin:8px 0 6px}
+  .tx p{font-size:13px;line-height:1.45}
+  .tx .small{margin-top:8px}
+  .sl .go{margin-top:10px}
+  .sl.lazer ul{margin:0}.sl.lazer li{padding:4px 0;font-size:12px}
+  .sl.lazer .tx h2{margin:0 0 6px}
+  .sl.pair{grid-template-columns:.9fr 1fr 1fr .9fr;grid-template-rows:minmax(0,1fr)}
+  .sl.pair .ph,.sl.pair .tx{grid-row:1}
+  .sl.pair .tx.a{grid-column:1}.sl.pair .ph.a{grid-column:2}.sl.pair .ph.b{grid-column:3}.sl.pair .tx.b{grid-column:4}
+  .sl.pair .tx{align-self:center}
+  .sl.pair .tx h2{font-size:17px;margin:0 0 6px}.sl.pair .tx p{font-size:11.5px}
+  .sl.text h2{font-size:26px}.sl.text .cols{grid-template-columns:1fr 1fr;margin-top:14px;gap:20px}.sl.text .cols p{font-size:13px}
+  .sl.statement h2{font-size:28px}.sl.statement p{font-size:13.5px;margin-top:10px}
+  .sl.dark{padding:50px calc(28px + var(--safe-r)) 50px calc(28px + var(--safe-l))}
+  .sl.dark h2{font-size:22px;margin-bottom:12px}
+  .sl.dark li{grid-template-columns:minmax(150px,220px) 1fr;gap:12px;padding:5px 0;font-size:12px}
+  .sl.dark .stat b{font-size:48px}.sl.dark .stat span{font-size:12px;margin-top:6px}.sl.dark .src{margin-top:16px}
+  .sl.full .cap{bottom:52px;left:calc(16px + var(--safe-l))}
+  .sl.full .cap h2{font-size:28px;margin:8px 0 6px}
+  .sl.full .cap p{font-size:13px}
+  .sl.capa .cap h2{font-size:64px}.sl.capa .cap .sub{margin:8px 0 10px}
+  .sl.capa .tag,.pi{display:none}
+  .sl .btn{height:38px;width:auto;padding:0 14px;font-size:13px}
+  .sl.film .fcap{display:none}
+  .sl.film .snd{bottom:52px;right:calc(16px + var(--safe-r))}
+  .sl.film .ffs{bottom:96px;right:calc(16px + var(--safe-r));width:38px;padding:0}
+  .sl.film .rot{display:none}
+  .g-grid{grid-template-columns:repeat(4,1fr)}
+  #toast{bottom:calc(60px + var(--safe-b))}
+}
+/* modo app (adicionado à tela de início): esconde botões de tela cheia */
+@media (display-mode:fullscreen),(display-mode:standalone){ .fs,.sl.film .ffs{display:none!important} }
 </style>
 </head>
 <body>
@@ -404,6 +501,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   </div>
 </section>
 
+<div id="sheet" role="dialog" aria-label="Tela cheia"><div class="sh-in"><h4>Tela cheia no iPhone</h4><p>O Safari não deixa sites ocuparem a tela inteira. Para ver o Maré sem as barras do navegador, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>. O tour abre como um app.</p><p class="tip">O filme tem tela cheia própria: toque no botão de tela cheia dentro dele.</p><button class="btn light" id="shOk">Entendi</button></div></div>
 <div id="toast"></div>
 <div id="coords"></div>
 
@@ -499,7 +597,11 @@ SCENES.forEach(function(s){
   };
 });
 
-var start=(location.hash||"").slice(1); if(!byId[start]) start="aerea";
+var navType=(function(){ try{ var n=performance.getEntriesByType("navigation")[0]; return n?n.type:""; }catch(e){ return ""; } })();
+var start=(location.hash||"").slice(1);
+var deep=!!byId[start] && navType!=="reload";
+if(!deep) start="aerea";
+try{ if(location.hash||location.search) history.replaceState(null,"",location.pathname); }catch(e){}
 var viewer=null, current=start;
 
 function boot(){
@@ -544,7 +646,6 @@ function updateUI(){
   $("counter").textContent=String(s.i+1).padStart(2,"0")+" / "+String(SCENES.length).padStart(2,"0");
   renderStrip(s.s);
   var th=$("strip").querySelector(".th.on"); if(th && $("drawer").classList.contains("open")) th.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
-  try{ history.replaceState(null,"","#"+current); }catch(e){}
   document.title=s.t+" — Maré Residencial Pirangi";
   $("bPhoto").classList.toggle("hide", photoFor(current)<0);
 }
@@ -568,13 +669,32 @@ function stopAuto(){ if(!auto) return; auto=false; clearTimeout(autoT); $("bAuto
 $("bPrev").onclick=function(){ stopAuto(); step(-1); };
 $("bNext").onclick=function(){ stopAuto(); step(1); };
 $("bAuto").onclick=function(){ auto?stopAuto():startAuto(); };
+var FS_OK=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled);
+function inFS(){ return !!(document.fullscreenElement||document.webkitFullscreenElement); }
+function filmVideo(){ var el=$("gSlides").querySelector(".sl.film"); return el?el.querySelector("video"):null; }
+function filmFS(){
+  var v=filmVideo(); if(!v) return;
+  if(v.dataset.v){ v.src=v.dataset.v; v.removeAttribute("data-v"); }
+  try{
+    if(FS_OK){ var r=v.requestFullscreen||v.webkitRequestFullscreen; var pr=r.call(v); if(pr&&pr.then) pr.then(lockLand).catch(function(){}); }
+    else if(v.webkitEnterFullscreen){ v.play().catch(function(){}); v.webkitEnterFullscreen(); }
+  }catch(e){}
+  if(v.paused) v.play().catch(function(){});
+}
+function lockLand(){ try{ if(screen.orientation&&screen.orientation.lock) screen.orientation.lock("landscape").catch(function(){}); }catch(e){} }
 function toggleFS(){
+  if(!FS_OK){
+    if($("gal").classList.contains("open") && SL[gi] && SL[gi].k==="film"){ filmFS(); return; }
+    $("sheet").classList.add("open"); return;
+  }
   var el=document.documentElement;
   try{ if(document.fullscreenElement||document.webkitFullscreenElement){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
     else { var r=(el.requestFullscreen||el.webkitRequestFullscreen); if(r){ var p=r.call(el); if(p&&p.catch) p.catch(function(){toast("Tela cheia indisponível aqui")}); } else toast("Tela cheia indisponível aqui"); } }
   catch(e){ toast("Tela cheia indisponível aqui"); }
 };
 [].forEach.call(document.querySelectorAll(".fs"),function(b){ b.onclick=toggleFS; });
+$("shOk").onclick=function(){ $("sheet").classList.remove("open"); };
+$("sheet").onclick=function(e){ if(e.target.id==="sheet") $("sheet").classList.remove("open"); };
 document.addEventListener("fullscreenchange",function(){ var on=!!document.fullscreenElement; [].forEach.call(document.querySelectorAll(".fs"),function(b){ b.classList.toggle("on",on); }); });
 $("bShare").onclick=function(){
   var url=location.href.split("#")[0]+"#"+current;
@@ -632,7 +752,7 @@ function slideHTML(p){
   var pill=p.pill||chapName(p.c);
   switch(p.k){
   case "cover": return '<div class="sl full capa">'+im(p.img,"bg")+'<div class="ov"></div><div class="cap anim"><h2>MARÉ</h2><div class="sub">Residencial Pirangi</div><p>Houses com piscina, apartamentos com vista para o mar e rooftop de lazer.</p></div><div class="tag"><span class="chip">Lançamento · Pirangi, RN</span></div></div>';
-  case "film": return '<div class="sl film"><video playsinline preload="none" poster="video/mare-filme.jpg" data-v="video/mare-filme.mp4"></video><div class="fcap"><span class="chip">Filme</span><h2>'+p.t+'</h2></div><button class="bigplay" aria-label="Reproduzir filme"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button><button class="btn snd" aria-label="Som"><svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path class="w" d="M15.5 9a4.5 4.5 0 010 6M18 6.5a8 8 0 010 11"/></svg><span class="t">Som</span></button><div class="rot">Gire o celular para ver em tela cheia</div><div class="fbar"><i></i></div></div>';
+  case "film": return '<div class="sl film"><video playsinline preload="none" poster="video/mare-filme.jpg" data-v="video/mare-filme.mp4"></video><div class="fcap"><span class="chip">Filme</span><h2>'+p.t+'</h2></div><button class="bigplay" aria-label="Reproduzir filme"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button><button class="btn icon ffs" aria-label="Filme em tela cheia"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button><button class="btn snd" aria-label="Som"><svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path class="w" d="M15.5 9a4.5 4.5 0 010 6M18 6.5a8 8 0 010 11"/></svg><span class="t">Som</span></button><div class="rot">Gire o celular para ver em tela cheia</div><div class="fbar"><i></i></div></div>';
   case "full": return '<div class="sl full">'+im(p.img,"bg")+'<div class="ov"></div><div class="cap anim"><span class="chip">'+pill+'</span><h2>'+p.t+'</h2><p>'+p.d+'</p>'+goBtn(p.s,1)+'</div><small class="pi">Perspectiva ilustrativa</small></div>';
   case "close": return '<div class="sl full capa close">'+im(p.img,"bg")+'<div class="ov"></div><div class="cap anim"><h2>MARÉ</h2><div class="sub">Residencial Pirangi</div><p>Agende sua visita e conheça o tour virtual 360°.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px"><button class="btn light" data-act="tour">'+I360+'Iniciar tour 360°</button><button class="btn" data-act="restart">Ver de novo</button></div></div><small class="pi">Imagens ilustrativas</small></div>';
   case "text": return '<div class="sl text"><span class="blob tr"></span><div class="anim" style="position:relative;z-index:1"><h2>'+p.t+'</h2><div class="cols"><p>'+p.cols[0]+'</p><p>'+p.cols[1]+'</p></div></div></div>';
@@ -672,6 +792,9 @@ function gShow(i){
   $("gN").textContent=String(gi+1).padStart(2,"0")+" / "+SL.length;
   gSched();
 }
+var immT=null;
+function armImm(){ clearTimeout(immT); $("gal").classList.remove("immersive"); immT=setTimeout(function(){ var v=filmVideo(); if(v&&!v.paused&&SL[gi].k==="film") $("gal").classList.add("immersive"); },2200); }
+["mousemove","touchstart"].forEach(function(ev){ $("gal").addEventListener(ev,function(){ var v=filmVideo(); if(v&&!v.paused&&SL[gi]&&SL[gi].k==="film") armImm(); },{passive:true}); });
 function filmEl(){ var el=$("gSlides").querySelector(".sl.film"); return el; }
 function filmPlay(){
   var el=filmEl(); if(!el) return; var v=el.querySelector("video");
@@ -680,7 +803,7 @@ function filmPlay(){
   if(pr&&pr.catch) pr.catch(function(){ v.muted=true; v.play().catch(function(){}); });
   setSnd();
 }
-function filmStop(){ var el=filmEl(); if(!el) return; var v=el.querySelector("video"); if(!v.paused) v.pause(); }
+function filmStop(){ clearTimeout(immT); $("gal").classList.remove("immersive"); var el=filmEl(); if(!el) return; var v=el.querySelector("video"); if(!v.paused) v.pause(); }
 function setSnd(){ var el=filmEl(); if(!el) return; var v=el.querySelector("video"), b=el.querySelector(".snd");
   b.classList.toggle("on",!v.muted); b.querySelector(".w").style.opacity=v.muted?.25:1; b.querySelector(".t").textContent=v.muted?"Ativar som":"Som"; }
 function filmWire(){
@@ -692,6 +815,10 @@ function filmWire(){
   v.addEventListener("volumechange",setSnd);
   el.querySelector(".bigplay").onclick=function(e){ e.stopPropagation(); if(v.dataset.v){ v.src=v.dataset.v; v.removeAttribute("data-v"); } v.play(); };
   v.addEventListener("click",function(){ v.paused?v.play():v.pause(); });
+  el.querySelector(".ffs").onclick=function(e){ e.stopPropagation(); filmFS(); };
+  v.addEventListener("play",function(){ armImm(); });
+  v.addEventListener("pause",function(){ clearTimeout(immT); $("gal").classList.remove("immersive"); });
+  v.addEventListener("ended",function(){ clearTimeout(immT); $("gal").classList.remove("immersive"); });
   el.querySelector(".snd").onclick=function(e){ e.stopPropagation(); v.muted=!v.muted; if(v.paused) v.play(); };
 }
 function runProg(){ var g=$("gProg"); g.classList.remove("run"); void g.offsetWidth; g.style.animationDuration=G_MS+"ms"; g.classList.add("run"); }
@@ -748,7 +875,7 @@ window.addEventListener("hashchange", function(){ var h=location.hash.slice(1); 
 })();
 
 buildTabs();
-if(location.hash && byId[location.hash.slice(1)]) $("intro").classList.add("hide");
+if(deep) $("intro").classList.add("hide");
 boot();
 })();
 </script>
