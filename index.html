@@ -224,6 +224,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 /* filme (tela própria) */
 #filmView{position:fixed;inset:0;z-index:28;background:#0b1f26;color:#fff;opacity:0;visibility:hidden;transition:opacity .45s,visibility .45s;--gp:clamp(18px,3.6vw,48px)}
 #filmView.open{opacity:1;visibility:visible}
+/* camadas fechadas nunca recebem clique (nem os filhos) */
+#filmView:not(.open),#filmView:not(.open) *,#gal:not(.open),#gal:not(.open) *,#sheet:not(.open),#sheet:not(.open) *,#intro.hide,#intro.hide *{visibility:hidden!important;pointer-events:none!important}
 #filmView .sl.film{--gp:inherit}
 .fv-top{position:absolute;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(18px + var(--safe-t)) calc(var(--gp) + var(--safe-r)) 0 calc(var(--gp) + var(--safe-l));transition:opacity .4s}
 #filmView.playing .fv-top .wordmark{opacity:0}
