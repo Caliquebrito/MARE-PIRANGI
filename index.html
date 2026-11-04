@@ -215,6 +215,22 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 .sl.dark li:last-child{border-bottom:1px solid rgba(255,255,255,.12)}
 .sl.dark li b{font-weight:500}.sl.dark li span{color:rgba(255,255,255,.72)}
 .sl.dark .anim{position:relative;z-index:1}
+/* filme */
+.sl.film{background:#0b1f26}
+.sl.film video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#0b1f26}
+.sl.film .bigplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:84px;height:84px;border-radius:50%;background:rgba(243,244,239,.92);display:grid;place-items:center;box-shadow:0 14px 40px rgba(0,0,0,.35);transition:opacity .35s,transform .35s var(--ease)}
+.sl.film .bigplay svg{width:28px;height:28px;fill:var(--deep);margin-left:4px}
+.sl.film .bigplay:hover{transform:translate(-50%,-50%) scale(1.06)}
+.sl.film.playing .bigplay{opacity:0;pointer-events:none}
+.sl.film .fcap{position:absolute;left:var(--gp);bottom:calc(var(--gp) + 46px);z-index:2;color:#fff;transition:opacity .4s}
+.sl.film .fcap h2{font-size:clamp(28px,3vw,44px);margin-top:12px}
+.sl.film.playing .fcap{opacity:0}
+.sl.film .snd{position:absolute;right:var(--gp);bottom:calc(var(--gp) + 46px);z-index:3}
+#gal.on-film .g-top .wordmark{opacity:0}
+.sl.film .rot{display:none}
+@media (max-width:760px) and (orientation:portrait){.sl.film .rot{display:block;position:absolute;left:0;right:0;top:calc(50% + 28vw + 16px);text-align:center;font-size:12.5px;color:rgba(255,255,255,.6);z-index:2}}
+.sl.film .fbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.12);z-index:3}
+.sl.film .fbar i{display:block;height:100%;width:0;background:#b9d6cf}
 /* moldura da apresentação */
 .g-top{position:absolute;left:0;right:0;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:calc(18px + var(--safe-t)) calc(var(--gp) - 4px) 0}
 .g-top .wordmark{color:var(--deep);transition:color .4s}
@@ -353,6 +369,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
     <p>Houses com piscina, apartamentos com vista para o mar e rooftop de lazer.</p>
     <div class="acts">
       <button class="btn light" id="bStart"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4"/><path d="M12 3v1.5M12 19.5V21"/></svg>Iniciar tour 360°</button>
+      <button class="btn" id="bFilm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5v7l6-3.5z"/></svg>Assistir ao filme</button>
       <button class="btn" id="bPres"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4-2.5z"/></svg>Ver apresentação</button>
     </div>
   </div>
@@ -575,6 +592,7 @@ var D={
 // k = tipo de página: cover, text, split, chapter, duo, full, lazer, pair, stats, list, statement, close
 var SL=[
  {k:"cover",c:"loc",img:"ext-21-vista-piscina"},
+ {k:"film",c:"loc",t:"Maré em movimento"},
  {k:"text",c:"loc",t:"Uma casa de praia que acompanha o desenho da maré.",cols:["Tijolo aparente, varandas brancas que ondulam como areia molhada e janelas inteiras abertas para o Atlântico.","Houses térreas com piscina, apartamentos com vista para o mar e um rooftop inteiro dedicado ao lazer."]},
  {k:"split",c:"loc",img:"ext-07-aerea-02",t:"Pirangi, litoral sul de Natal",d:"Dunas, coqueirais e um dos trechos de mar mais procurados do Rio Grande do Norte, perto da capital.",s:"aerea"},
  {k:"stats",c:"loc",t:"Natal valorizou acima da média do país em 2026"},
@@ -605,7 +623,7 @@ var SL=[
  {k:"statement",c:"fim",t:"Para morar, veranear ou alugar na alta temporada.",d:"Houses com piscina, apartamentos com vista e lazer no rooftop, de frente para o mar de Pirangi."},
  {k:"close",c:"fim",img:"ext-06-aerea-01",t:"MARÉ"}
 ];
-var DARK={cover:1,full:1,stats:1,list:1,close:1};
+var DARK={cover:1,full:1,stats:1,list:1,close:1,film:1};
 var I360='<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4"/><path d="M12 3v1.5M12 19.5V21"/></svg>';
 function goBtn(sc,dark){ return sc?'<button class="'+(dark?'btn':'cbtn')+' go" data-go="'+sc+'">'+I360+'Ver em 360°</button>':''; }
 function im(f,cls){ return '<img'+(cls?' class="'+cls+'"':'')+' data-src="img/'+f+'.jpg" alt="">'; }
@@ -614,6 +632,7 @@ function slideHTML(p){
   var pill=p.pill||chapName(p.c);
   switch(p.k){
   case "cover": return '<div class="sl full capa">'+im(p.img,"bg")+'<div class="ov"></div><div class="cap anim"><h2>MARÉ</h2><div class="sub">Residencial Pirangi</div><p>Houses com piscina, apartamentos com vista para o mar e rooftop de lazer.</p></div><div class="tag"><span class="chip">Lançamento · Pirangi, RN</span></div></div>';
+  case "film": return '<div class="sl film"><video playsinline preload="none" poster="video/mare-filme.jpg" data-v="video/mare-filme.mp4"></video><div class="fcap"><span class="chip">Filme</span><h2>'+p.t+'</h2></div><button class="bigplay" aria-label="Reproduzir filme"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></button><button class="btn snd" aria-label="Som"><svg viewBox="0 0 24 24"><path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path class="w" d="M15.5 9a4.5 4.5 0 010 6M18 6.5a8 8 0 010 11"/></svg><span class="t">Som</span></button><div class="rot">Gire o celular para ver em tela cheia</div><div class="fbar"><i></i></div></div>';
   case "full": return '<div class="sl full">'+im(p.img,"bg")+'<div class="ov"></div><div class="cap anim"><span class="chip">'+pill+'</span><h2>'+p.t+'</h2><p>'+p.d+'</p>'+goBtn(p.s,1)+'</div><small class="pi">Perspectiva ilustrativa</small></div>';
   case "close": return '<div class="sl full capa close">'+im(p.img,"bg")+'<div class="ov"></div><div class="cap anim"><h2>MARÉ</h2><div class="sub">Residencial Pirangi</div><p>Agende sua visita e conheça o tour virtual 360°.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:22px"><button class="btn light" data-act="tour">'+I360+'Iniciar tour 360°</button><button class="btn" data-act="restart">Ver de novo</button></div></div><small class="pi">Imagens ilustrativas</small></div>';
   case "text": return '<div class="sl text"><span class="blob tr"></span><div class="anim" style="position:relative;z-index:1"><h2>'+p.t+'</h2><div class="cols"><p>'+p.cols[0]+'</p><p>'+p.cols[1]+'</p></div></div></div>';
@@ -627,36 +646,64 @@ function slideHTML(p){
   case "statement": return '<div class="sl statement"><span class="blob bl" style="left:auto;right:0;border-radius:min(9vw,120px) 0 0 0"></span><div class="anim" style="position:relative;z-index:1"><h2>'+p.t+'</h2><p>'+p.d+'</p></div></div>';
   }
 }
-var gi=0, gPlayT=null, G_MS=6500, built=false;
+var gi=0, gPlayT=null, gPlaying=false, G_MS=6500, built=false;
 function gBuild(){
   if(built) return; built=true;
   $("gSlides").innerHTML=SL.map(slideHTML).join("");
   $("gChap").innerHTML=CHAPTERS.map(function(c){return '<button class="cbtn" data-c="'+c.id+'">'+c.name+'</button>'}).join("");
   $("gGrid").innerHTML=SL.map(function(p,i){
-    var f=p.img||(p.a&&p.a.img), t=p.t||"", bg=f?' style="background-image:url(imgthumb/'+f+'.jpg)"':'';
+    var f=p.img||(p.a&&p.a.img), t=p.t||"", bg=f?' style="background-image:url(imgthumb/'+f+'.jpg)"':(p.k==="film"?' style="background-image:url(video/mare-filme.jpg)"':'');
+    if(p.k==="film") f=1;
     var label=p.k==="cover"?"Capa":(p.k==="stats"?"+5,33%":(p.k==="list"?"O que só o Maré tem":(f?"":t)));
     return '<button data-i="'+i+'"><div class="im"'+bg+'>'+(f?'':label)+'</div><div class="t">'+(p.k==="cover"?"Capa":t)+'</div><div class="k">'+chapName(p.c)+'</div></button>';
   }).join("");
+  filmWire();
 }
 function lazy(i){ var el=$("gSlides").children[i]; if(!el) return; [].forEach.call(el.querySelectorAll("img[data-src]"),function(m){ m.src=m.getAttribute("data-src"); m.removeAttribute("data-src"); }); }
 function gShow(i){
   gBuild(); gi=(i+SL.length)%SL.length; var p=SL[gi], els=$("gSlides").children;
   for(var k=-1;k<=2;k++) lazy((gi+k+SL.length)%SL.length);
   [].forEach.call(els,function(e,j){ e.classList.toggle("on",j===gi); });
+  filmStop();
+  if(p.k==="film") filmPlay();
   $("gal").classList.toggle("ui-dark",!!DARK[p.k]);
+  $("gal").classList.toggle("on-film",p.k==="film");
   [].forEach.call($("gChap").children,function(b){b.classList.toggle("on",b.dataset.c===p.c)});
   $("gN").textContent=String(gi+1).padStart(2,"0")+" / "+SL.length;
-  if(gPlayT) runProg();
+  gSched();
+}
+function filmEl(){ var el=$("gSlides").querySelector(".sl.film"); return el; }
+function filmPlay(){
+  var el=filmEl(); if(!el) return; var v=el.querySelector("video");
+  if(v.dataset.v){ v.src=v.dataset.v; v.removeAttribute("data-v"); }
+  v.muted=false; var pr=v.play();
+  if(pr&&pr.catch) pr.catch(function(){ v.muted=true; v.play().catch(function(){}); });
+  setSnd();
+}
+function filmStop(){ var el=filmEl(); if(!el) return; var v=el.querySelector("video"); if(!v.paused) v.pause(); }
+function setSnd(){ var el=filmEl(); if(!el) return; var v=el.querySelector("video"), b=el.querySelector(".snd");
+  b.classList.toggle("on",!v.muted); b.querySelector(".w").style.opacity=v.muted?.25:1; b.querySelector(".t").textContent=v.muted?"Ativar som":"Som"; }
+function filmWire(){
+  var el=filmEl(); if(!el||el.dataset.w) return; el.dataset.w=1; var v=el.querySelector("video");
+  v.addEventListener("play",function(){ el.classList.add("playing"); });
+  v.addEventListener("pause",function(){ el.classList.remove("playing"); });
+  v.addEventListener("timeupdate",function(){ if(v.duration) el.querySelector(".fbar i").style.width=(v.currentTime/v.duration*100)+"%"; });
+  v.addEventListener("ended",function(){ el.classList.remove("playing"); if(gPlaying&&SL[gi].k==="film") gShow(gi+1); });
+  v.addEventListener("volumechange",setSnd);
+  el.querySelector(".bigplay").onclick=function(e){ e.stopPropagation(); if(v.dataset.v){ v.src=v.dataset.v; v.removeAttribute("data-v"); } v.play(); };
+  v.addEventListener("click",function(){ v.paused?v.play():v.pause(); });
+  el.querySelector(".snd").onclick=function(e){ e.stopPropagation(); v.muted=!v.muted; if(v.paused) v.play(); };
 }
 function runProg(){ var g=$("gProg"); g.classList.remove("run"); void g.offsetWidth; g.style.animationDuration=G_MS+"ms"; g.classList.add("run"); }
 function gOpen(i){ stopAuto(); setDrawer(false); $("gIndex").classList.remove("open"); $("gal").classList.add("open"); gShow(i||0); }
-function gClose(){ gStop(); $("gal").classList.remove("open"); }
-function gStart(){ $("gPlay").classList.add("on"); clearInterval(gPlayT); gPlayT=setInterval(function(){ if(gi===SL.length-1){gStop();return;} gShow(gi+1); },G_MS); runProg(); }
-function gStop(){ $("gPlay").classList.remove("on"); clearInterval(gPlayT); gPlayT=null; $("gProg").classList.remove("run"); }
+function gClose(){ gStop(); filmStop(); $("gal").classList.remove("open"); }
+function gSched(){ clearTimeout(gPlayT); if(!gPlaying) return; if(SL[gi].k==="film"){ $("gProg").classList.remove("run"); return; } runProg(); gPlayT=setTimeout(function(){ if(gi===SL.length-1){gStop();return;} gShow(gi+1); },G_MS); }
+function gStart(){ gPlaying=true; $("gPlay").classList.add("on"); gSched(); }
+function gStop(){ gPlaying=false; $("gPlay").classList.remove("on"); clearTimeout(gPlayT); gPlayT=null; $("gProg").classList.remove("run"); }
 function goHome(){ gClose(); stopAuto(); setDrawer(false); $("intro").classList.remove("hide"); }
 $("gPrev").onclick=function(){gStop();gShow(gi-1)};
 $("gNext").onclick=function(){gStop();gShow(gi+1)};
-$("gPlay").onclick=function(){ gPlayT?gStop():gStart(); };
+$("gPlay").onclick=function(){ gPlaying?gStop():gStart(); };
 $("gHome").onclick=goHome;
 $("gIdx").onclick=function(){ gStop(); gBuild(); $("gIndex").classList.add("open"); };
 $("gIdxClose").onclick=function(){ $("gIndex").classList.remove("open"); };
@@ -676,6 +723,7 @@ function photoFor(id){ for(var i=0;i<SL.length;i++){ var p=SL[i]; if(p.s===id||(
 $("bGal").onclick=function(){ var k=photoFor(current); gOpen(k<0?0:k); };
 $("bPhoto").onclick=function(){ var k=photoFor(current); if(k>=0) gOpen(k); };
 $("bPres").onclick=function(){ gOpen(0); gStart(); };
+$("bFilm").onclick=function(){ gOpen(1); };
 $("bStart").onclick=function(){ $("intro").classList.add("hide"); };
 $("bHome").onclick=goHome;
 

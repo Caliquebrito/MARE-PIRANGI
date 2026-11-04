@@ -6,6 +6,7 @@ Abra `index.html` em um servidor web (GitHub Pages, Netlify ou o site da Bambu).
 - `pano/` panorâmicas 360° (JPEG equiretangular)
 - `thumb/` miniaturas do menu
 - `img/` e `imgthumb/` imagens da galeria / apresentação
+- `video/` filme do empreendimento (MP4 H.264) e capa
 - `fonts/` Marcellus e Figtree (OFL), identidade do book
 - `lib/` visualizador Pannellum 2.5.7 (MIT)
 
