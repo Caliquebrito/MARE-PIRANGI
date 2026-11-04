@@ -121,6 +121,44 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 #coords{position:fixed;left:50%;top:50%;z-index:9;transform:translate(-50%,-50%);pointer-events:none;display:none;font:12px monospace;color:#fff;text-shadow:0 0 3px #000}
 #coords::before{content:"+";display:block;text-align:center;font-size:22px}
 
+
+/* ---------- Intro slideshow ---------- */
+#intro{background:var(--navy)!important}
+.kb{position:absolute;inset:0;overflow:hidden}
+.kb div{position:absolute;inset:-4%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.8s ease;animation:kb 14s linear infinite;will-change:transform,opacity}
+.kb div.on{opacity:1}
+@keyframes kb{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.12) translate(-2%,-1%)}}
+#intro::before{z-index:1}
+.intro-in,.intro-foot{z-index:2}
+.intro-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+.intro-btns .cta{margin-top:0}
+.cta.solid{background:var(--cream);color:var(--navy);border-color:var(--cream)}
+.cta.solid:hover{background:transparent;color:var(--cream)}
+
+/* ---------- Gallery ---------- */
+#gal{position:fixed;inset:0;z-index:25;background:#0f151f;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .45s,visibility .45s}
+#gal.open{opacity:1;visibility:visible}
+.g-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:calc(14px + var(--safe-t)) calc(18px + var(--safe-r)) 10px calc(18px + var(--safe-l))}
+.g-chap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.g-chap::-webkit-scrollbar{display:none}
+.g-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:pan-y}
+.g-stage img{max-width:100%;max-height:100%;object-fit:contain;opacity:0;transition:opacity .5s ease;user-select:none;-webkit-user-drag:none}
+.g-stage img.on{opacity:1}
+.g-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(23,32,46,.55);border:1px solid rgba(241,236,227,.3);display:grid;place-items:center;z-index:2}
+.g-nav svg{width:20px;height:20px;stroke:var(--cream);fill:none;stroke-width:1.6}
+.g-nav.l{left:16px}.g-nav.r{right:16px}
+.g-cap{position:absolute;left:0;right:0;bottom:0;padding:40px 24px 16px;background:linear-gradient(to top,rgba(15,21,31,.85),rgba(15,21,31,0));display:flex;align-items:flex-end;justify-content:space-between;gap:12px;pointer-events:none}
+.g-cap .k{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.g-cap .tt{font-size:18px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;margin-top:6px}
+.g-cap .n{font-size:10.5px;letter-spacing:.26em;color:var(--muted)}
+.g-cap .ib{pointer-events:auto}
+.g-strip{display:flex;gap:6px;overflow-x:auto;padding:10px calc(18px + var(--safe-r)) calc(12px + var(--safe-b)) calc(18px + var(--safe-l));scrollbar-width:thin;scrollbar-color:rgba(241,236,227,.25) transparent}
+.g-strip button{flex:none;width:96px;height:60px;background-size:cover;background-position:center;opacity:.5;border:1px solid transparent;transition:opacity .2s}
+.g-strip button.on{opacity:1;border-color:var(--gold)}
+.g-strip button:hover{opacity:.9}
+.ib.photo{display:none}.ib.photo.has{display:flex}
+@media (max-width:640px){.g-nav{display:none}.g-cap .tt{font-size:14px}.g-strip button{width:72px;height:46px}}
+
 @media (max-width:640px){
   .brand .name{font-size:21px}
   .scene-meta .title{font-size:13.5px}
@@ -135,6 +173,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
   .ib{width:38px;height:38px;min-width:38px}
   .legal{font-size:8px;letter-spacing:.1em}
   #bFull{display:none}
+  #bPrev,#bNext{display:none}
   .hs .lbl{font-size:10px;padding:5px 9px}
 }
 </style>
@@ -170,6 +209,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
     </div>
     <div class="counter" id="counter"></div>
     <div class="btns">
+      <button class="ib photo" id="bPhoto" aria-label="Ver imagem deste ambiente"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><circle cx="9" cy="10" r="1.6"/><path d="M3 16l5-4 4 3 3-2 6 4"/></svg><span class="t">Imagem</span></button>
+      <button class="ib" id="bGal" aria-label="Galeria"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="13" height="13"/><path d="M8 21h13V8"/></svg><span class="t">Galeria</span></button>
       <button class="ib" id="bAuto" aria-label="Passeio automático"><svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg><span class="t">Passeio</span></button>
       <button class="ib" id="bShare" aria-label="Copiar link"><svg viewBox="0 0 24 24"><path d="M10 14a5 5 0 007 0l3-3a5 5 0 00-7-7l-1 1M14 10a5 5 0 00-7 0l-3 3a5 5 0 007 7l1-1"/></svg><span class="t">Link</span></button>
       <button class="ib" id="bFull" aria-label="Tela cheia"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -179,16 +220,35 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 </footer>
 
 <section id="intro">
+  <div class="kb" id="kb"></div>
   <div class="intro-in">
     <svg class="wave" viewBox="0 0 64 16"><path d="M2 5c7-4 14 4 21 0s14-4 21 0 12 2 18 0M2 11c7-4 14 4 21 0s14-4 21 0 12 2 18 0" stroke="#b89662" stroke-width="1.2" fill="none"/></svg>
     <h1>MARÉ</h1>
     <div class="s1">Residencial Pirangi</div>
     <div class="rule"></div>
     <div class="s2">Tour virtual 360° · Natal · RN</div>
-    <button class="cta" id="bStart"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg>Iniciar passeio</button>
+    <div class="intro-btns"><button class="cta solid" id="bStart"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/></svg>Tour 360°</button><button class="cta" id="bPres"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"/><path d="M3 15l5-4 4 3 3-2 6 4"/></svg>Apresentação</button></div>
     <div class="hint">Arraste para olhar ao redor · toque nos pontos para caminhar</div>
   </div>
   <div class="intro-foot">Imagens ilustrativas · sujeitas a alterações</div>
+</section>
+
+<section id="gal" aria-label="Galeria">
+  <div class="g-top">
+    <div class="g-chap" id="gChap"></div>
+    <div class="btns">
+      <button class="ib" id="gPlay" aria-label="Reproduzir"><svg viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg></button>
+      <button class="ib" id="gClose" aria-label="Voltar ao tour"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span class="t">Fechar</span></button>
+    </div>
+  </div>
+  <div class="g-stage" id="gStage">
+    <img id="gImgA" alt=""><img id="gImgB" alt="" style="position:absolute">
+    <button class="g-nav l" id="gPrev" aria-label="Anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="g-nav r" id="gNext" aria-label="Próxima"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="g-cap"><div><div class="k" id="gK"></div><div class="tt" id="gT"></div></div>
+      <div style="display:flex;align-items:center;gap:12px"><span class="n" id="gN"></span><button class="ib" id="g360"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="4"/><path d="M12 3v2M12 19v2"/></svg><span class="t">Ver em 360°</span></button></div></div>
+  </div>
+  <div class="g-strip" id="gStrip"></div>
 </section>
 
 <div id="toast"></div>
@@ -292,7 +352,7 @@ var start = (location.hash||"").slice(1); if(!byId[start]) start = "aerea";
 var viewer = null, current = start, started = false;
 
 /* intro background */
-document.getElementById("intro").style.backgroundImage = "url(thumb/02-fachada-principal.jpg)";
+
 
 function boot(){
   viewer = pannellum.viewer("pano", {
@@ -339,6 +399,7 @@ function updateUI(){
   var th=$("strip").querySelector(".th.on"); if(th && $("drawer").classList.contains("open")) th.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
   try{ history.replaceState(null,"","#"+current); }catch(e){ try{ location.hash=current; }catch(_){} }
   document.title = s.t+" — Maré Residencial Pirangi";
+  if(typeof photoFor==="function") $("bPhoto").classList.toggle("has", photoFor(current)>=0);
 }
 function go(id){ if(!viewer||id===current) return; var s=byId[id]; viewer.loadScene(id, s.pitch, s.yaw, s.hfov||100); }
 function step(d){ var i=(byId[current].i+d+SCENES.length)%SCENES.length; go(SCENES[i].id); }
@@ -389,6 +450,87 @@ document.addEventListener("keydown", function(e){
   if(e.key==="c"||e.key==="C"){ var c=$("coords"); c.style.display=c.style.display==="block"?"none":"block"; }
 });
 setInterval(function(){ var c=$("coords"); if(viewer&&c.style.display==="block") c.textContent=current+"  yaw "+viewer.getYaw().toFixed(0)+"  pitch "+viewer.getPitch().toFixed(0); }, 200);
+
+
+/* ============ GALERIA / APRESENTAÇÃO ============ */
+var CHAPTERS=[{id:"loc",name:"Localização"},{id:"fach",name:"Fachadas"},{id:"ter",name:"Térreo"},{id:"roof",name:"Rooftop"},{id:"apto",name:"Apartamento"}];
+// [arquivo, capítulo, legenda, cena 360]
+var PHOTOS=[
+ ["ext-06-aerea-01","loc","Pirangi ao entardecer","aerea"],
+ ["ext-07-aerea-02","loc","Pirangi à noite","aerea"],
+ ["ext-10-aerea-lazer","loc","Vista aérea do conjunto","rooftop"],
+ ["ext-01-fachada","fach","Fachada principal","fachada-principal"],
+ ["ext-05-fachada-lateral-oposta","fach","Perspectiva da esquina","esquina"],
+ ["ext-04-fachada-lateral","fach","Fachada lateral","lateral"],
+ ["ext-03-fachada-paisagem","fach","Inserção na paisagem","paisagem"],
+ ["ext-02-fachada-posterior","fach","Fachada posterior","posterior"],
+ ["ext-08-estacionamento","ter","Estacionamento coberto","estacionamento"],
+ ["ext-11-playground-e-gardens","ter","Playground e gardens","playground"],
+ ["ext-09-ap-garden","ter","Apartamento garden","garden"],
+ ["ext-19-vista-piscina","roof","Piscina do rooftop","rooftop"],
+ ["ext-20-vista-piscina-2","roof","Borda infinita","deck"],
+ ["ext-21-vista-piscina","roof","Piscina com vista mar","borda"],
+ ["ext-16-vista-caramanchao","roof","Caramanchão","caramanchao"],
+ ["ext-14-vista-area-gourmet","roof","Espaço gourmet","gourmet"],
+ ["ext-15-vista-area-gourmet","roof","Espaço gourmet","gourmet"],
+ ["ext-17-churrasqueira","roof","Churrasqueira","churrasqueira"],
+ ["ext-18-churrasqueira","roof","Churrasqueira","churrasqueira"],
+ ["ext-13-vista-academia","roof","Academia","academia"],
+ ["ext-12-vista-academia","roof","Academia com vista mar","academia-salao"],
+ ["ext-22-vista-apartamento","apto","Varanda com vista mar","varanda"],
+ ["int-02-internas-2","apto","Living integrado","estar"],
+ ["int-02-internas-6","apto","Sala de estar","estar"],
+ ["int-02-internas-7","apto","Cozinha","sala"],
+ ["int-02-internas-4","apto","Suíte master","suite"],
+ ["int-02-internas-5","apto","Suíte master","suite"],
+ ["int-02-internas-3","apto","Quarto com vista mar","quarto2"],
+ ["int-02-internas-1","apto","Quarto infantil","quarto3"]
+];
+var gi=0, gPlayT=null, gFlip=false;
+function chapName(c){ return CHAPTERS.filter(function(x){return x.id===c})[0].name; }
+$("gChap").innerHTML=CHAPTERS.map(function(c){return '<button class="tab" data-c="'+c.id+'">'+c.name+'</button>'}).join("");
+$("gStrip").innerHTML=PHOTOS.map(function(p,i){return '<button data-i="'+i+'" style="background-image:url(imgthumb/'+p[0]+'.jpg)" aria-label="'+p[2]+'"></button>'}).join("");
+function gShow(i){
+  gi=(i+PHOTOS.length)%PHOTOS.length; var p=PHOTOS[gi];
+  var a=$(gFlip?"gImgA":"gImgB"), b=$(gFlip?"gImgB":"gImgA"); gFlip=!gFlip;
+  a.onload=function(){ a.classList.add("on"); b.classList.remove("on"); };
+  a.src="img/"+p[0]+".jpg"; a.alt=p[2];
+  $("gK").textContent=chapName(p[1]); $("gT").textContent=p[2];
+  $("gN").textContent=String(gi+1).padStart(2,"0")+" / "+PHOTOS.length;
+  $("g360").style.display=p[3]?"":"none";
+  [].forEach.call($("gChap").children,function(b){b.classList.toggle("on",b.dataset.c===p[1])});
+  [].forEach.call($("gStrip").children,function(b,j){b.classList.toggle("on",j===gi)});
+  var t=$("gStrip").children[gi]; if(t) t.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"});
+  var n=new Image(); n.src="img/"+PHOTOS[(gi+1)%PHOTOS.length][0]+".jpg";
+}
+function gOpen(i){ stopAuto(); $("gal").classList.add("open"); gShow(i||0); }
+function gClose(){ gStop(); $("gal").classList.remove("open"); }
+function gStart(){ $("gPlay").classList.add("on"); clearInterval(gPlayT); gPlayT=setInterval(function(){gShow(gi+1)},5500); }
+function gStop(){ $("gPlay").classList.remove("on"); clearInterval(gPlayT); gPlayT=null; }
+$("gPrev").onclick=function(){gStop();gShow(gi-1)};
+$("gNext").onclick=function(){gStop();gShow(gi+1)};
+$("gPlay").onclick=function(){ gPlayT?gStop():gStart(); };
+$("gClose").onclick=gClose;
+$("gStrip").onclick=function(e){var b=e.target.closest("button"); if(b){gStop();gShow(+b.dataset.i)}};
+$("gChap").onclick=function(e){var b=e.target.closest(".tab"); if(!b) return; gStop(); for(var i=0;i<PHOTOS.length;i++) if(PHOTOS[i][1]===b.dataset.c){gShow(i);break;}};
+$("g360").onclick=function(){ var sc=PHOTOS[gi][3]; gClose(); $("intro").classList.add("hide"); if(sc!==current) go(sc); };
+(function(){ var x0=null; var st=$("gStage");
+  st.addEventListener("touchstart",function(e){x0=e.touches[0].clientX},{passive:true});
+  st.addEventListener("touchend",function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>45){gStop();gShow(gi+(dx<0?1:-1))} x0=null; });
+})();
+document.addEventListener("keydown",function(e){ if(!$("gal").classList.contains("open")) return;
+  if(e.key==="ArrowRight"){gStop();gShow(gi+1)} if(e.key==="ArrowLeft"){gStop();gShow(gi-1)} if(e.key==="Escape") gClose(); });
+$("bGal").onclick=function(){ var k=photoFor(current); gOpen(k<0?0:k); };
+$("bPhoto").onclick=function(){ var k=photoFor(current); if(k>=0) gOpen(k); };
+$("bPres").onclick=function(){ gOpen(0); gStart(); };
+function photoFor(id){ for(var i=0;i<PHOTOS.length;i++) if(PHOTOS[i][3]===id) return i; return -1; }
+
+/* abertura com as aéreas */
+(function(){ var list=["ext-06-aerea-01","ext-07-aerea-02","ext-10-aerea-lazer","ext-01-fachada","ext-19-vista-piscina"], k=0, kb=$("kb");
+  kb.innerHTML=list.map(function(f){return '<div style="background-image:url(img/'+f+'.jpg)"></div>'}).join("");
+  var els=kb.children; els[0].classList.add("on");
+  setInterval(function(){ if($("intro").classList.contains("hide")) return; els[k].classList.remove("on"); k=(k+1)%els.length; els[k].classList.add("on"); }, 5000);
+})();
 
 buildTabs();
 // se abriu num link direto de ambiente, pula a abertura
