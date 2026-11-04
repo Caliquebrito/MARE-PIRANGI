@@ -259,6 +259,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;paddin
 (function(){
 "use strict";
 /* ============ CONTEÚDO DO TOUR ============ */
+var V = "2"; // versão das imagens: aumente ao trocar uma panorâmica
 var SECTORS = [
   {id:"externas",  name:"Fachadas"},
   {id:"terreo",    name:"Térreo"},
@@ -270,7 +271,7 @@ var SCENES = [
   {id:"aerea", file:"01-aerea", s:"externas", t:"Vista aérea", d:"Pirangi do Norte, a poucos passos do mar.", yaw:-10, pitch:-12, hfov:110,
    h:[["fachada-principal",-10,-17,"Maré Residencial","in"],[null,20,-4,"Praia de Pirangi","info"]]},
   {id:"fachada-principal", file:"02-fachada-principal", s:"externas", t:"Fachada principal", d:"Acesso com painel ripado, vidro e pedra natural.", yaw:-6, pitch:6,
-   h:[["estacionamento",-8,1,"Entrar no residencial","in"],["esquina",70,-3,"Perspectiva da esquina"],["lateral",-100,-3,"Fachada lateral"],["aerea",-6,26,"Vista aérea","up"]]},
+   h:[["estacionamento",-8,1,"Entrar no residencial","in"],["esquina",70,-3,"Perspectiva da esquina"],["posterior",-100,-3,"Fachada posterior"],["aerea",-6,26,"Vista aérea","up"]]},
   {id:"esquina", file:"04-fachada-esquina", s:"externas", t:"Perspectiva da esquina", d:"Volumetria das lajes curvas e terraços.", yaw:0, pitch:5,
    h:[["estacionamento",0,2,"Entrar no residencial","in"],["fachada-principal",-60,-4,"Fachada principal"],["lateral",65,-4,"Fachada lateral"]]},
   {id:"lateral", file:"06-fachada-lateral", s:"externas", t:"Fachada lateral", d:"Terraços em balanço voltados para o verde.", yaw:-4, pitch:5,
@@ -334,7 +335,7 @@ function hotspotTooltip(div, a){
 var scenesCfg = {};
 SCENES.forEach(function(s){
   scenesCfg[s.id] = {
-    title:s.t, type:"equirectangular", panorama:"pano/"+s.file+".jpg",
+    title:s.t, type:"equirectangular", panorama:"pano/"+s.file+".jpg?v="+V,
     yaw:s.yaw, pitch:s.pitch, hfov:s.hfov||100,
     hotSpots: s.h.map(function(h){
       var kind=h[4]||"go", spot={pitch:+h[2], yaw:+h[1], cssClass:"hs-wrap",
@@ -384,7 +385,7 @@ function renderStrip(sid){
   activeSector=sid;
   [].forEach.call($("tabs").children, function(b){ b.classList.toggle("on", b.dataset.s===sid); });
   $("strip").innerHTML = SCENES.filter(function(s){return s.s===sid}).map(function(s){
-    return '<button class="th'+(s.id===current?' on':'')+'" data-id="'+s.id+'"><div class="img" style="background-image:url(thumb/'+s.file+'.jpg);background-position:'+thumbX(s.yaw)+'% '+(50-s.pitch*0.6)+'%"></div><div class="cap">'+s.t+'</div></button>';
+    return '<button class="th'+(s.id===current?' on':'')+'" data-id="'+s.id+'"><div class="img" style="background-image:url(thumb/'+s.file+'.jpg?v='+V+');background-position:'+thumbX(s.yaw)+'% '+(50-s.pitch*0.6)+'%"></div><div class="cap">'+s.t+'</div></button>';
   }).join("");
 }
 $("strip").addEventListener("click", function(e){ var b=e.target.closest(".th"); if(b){ stopAuto(); go(b.dataset.id); } });
@@ -411,7 +412,7 @@ function prefetch(id){
   s.h.forEach(function(h){ if(h[0]) next.push(h[0]); });
   next.push(SCENES[(s.i+1)%SCENES.length].id);
   next.slice(0,3).forEach(function(n){
-    var u="pano/"+byId[n].file+".jpg"; if(fetched[u]) return; fetched[u]=1;
+    var u="pano/"+byId[n].file+".jpg?v="+V; if(fetched[u]) return; fetched[u]=1;
     setTimeout(function(){ try{ var im=new Image(); im.decoding="async"; im.src=u; }catch(e){} }, 600);
   });
 }
